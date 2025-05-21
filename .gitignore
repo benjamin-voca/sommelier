@@ -22,4 +22,11 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-!./storage/app/data.csv
+
+# Ignore all of storage by default
+/storage/**
+
+# Allow specific file
+!/storage/app/
+!/storage/app/data/
+!/storage/app/data/data.csv
