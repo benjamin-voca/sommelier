@@ -13,7 +13,7 @@ Route::middleware('api')->group(function () {
         ]);
 
         try {
-            $csv = Reader::createFromPath(storage_path('app/data.csv'), 'r');
+            $csv = Reader::createFromPath(storage_path('app/data/data.csv'), 'r');
             $csv->setHeaderOffset(0);
 
             // Correctly process records using the Statement
