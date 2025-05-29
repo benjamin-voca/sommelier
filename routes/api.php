@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use League\Csv\Reader;
 use League\Csv\Statement;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 Route::middleware('api')->group(function () {
     Route::get('/search', function (Request $request) {
@@ -13,31 +14,18 @@ Route::middleware('api')->group(function () {
         ]);
 
         try {
-            $csv = Reader::createFromPath(storage_path('app/data/data.csv'), 'r');
-            $csv->setHeaderOffset(0);
+            $searchTerm = '%' . $request->search . '%';
+            $results = DB::select(
+                'SELECT * FROM Fragrances WHERE dior LIKE ? OR original LIKE ? OR dupe LIKE ?',
+                [$searchTerm, $searchTerm, $searchTerm]
+            );
 
-            // Correctly process records using the Statement
-            $stmt = (new Statement())
-                ->where(function (array $record) use ($request) {
-                    $searchTerm = strtolower($request->search);
-                    
-                    foreach ($record as $value) {
-                        // Check if any column contains the search term
-                        if (str_contains(strtolower($value), $searchTerm)) {
-                            return true; // Include this record in results
-                        }
-                    }
-                    return false;
-                });
-
-            // Execute the search
-            $results = $stmt->process($csv);
-            
             return response()->json([
                 'success' => true,
-                'count' => $results->count(),
-                'results' => iterator_to_array($results)
+                'count' => count($results),
+                'results' => $results
             ]);
+
 
         } catch (\Exception $e) {
             Log::error("Search error: " . $e->getMessage());

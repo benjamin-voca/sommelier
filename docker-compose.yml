@@ -1,0 +1,29 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-fragrances
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "8000:3306"  # Recommended to keep default MySQL port
+    volumes:
+      - ./01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./02_data.sql:/docker-entrypoint-initdb.d/02_data.sql
+      - mysql_data:/var/lib/mysql  # Persistent storage
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: redis-fragrances
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  redis_data:
