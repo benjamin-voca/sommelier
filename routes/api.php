@@ -25,7 +25,7 @@ Route::middleware('api')->group(function () {
                 'count' => count($results),
                 'results' => $results
             ]);
-
+ 
 
         } catch (\Exception $e) {
             Log::error("Search error: " . $e->getMessage());
