@@ -1,5 +1,4 @@
-USE mydatabase;
-CREATE TABLE Fragrances (
+CREATE TABLE IF NOT EXISTS Fragrances (
     id INT AUTO_INCREMENT,
     dior VARCHAR(4096) NOT NULL,
     original VARCHAR(4096) NOT NULL,
